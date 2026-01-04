@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Avatar, Button, Card, Tabs, Descriptions, Form, Input, message, Tag, Pagination, Modal, DatePicker, InputNumber, Row, Col, Select, notification, Table } from "antd";
+import { Avatar, Button, Card, Tabs, Descriptions, Form, Input, message, Tag, Pagination, Modal, InputNumber, Row, Col, Select, Table } from "antd";
 import { EditOutlined, LockOutlined, UserOutlined, SaveOutlined, CloseOutlined } from "@ant-design/icons";
 import { changeInfoApi, changePassApi } from "../../api/users";
 import { getDetailTransactionApi, getMyOrderApi } from "../../api/transaction";
@@ -156,6 +156,7 @@ const Profile = () => {
       const res = await getMyWarrantyApi();
       setWarranties(res?.data || []);
       setTotalWarranties(res?.total || 0);
+      console.log(page);
     } catch (error) {
       message.error("Không thể tải lịch sử bảo hành.");
     }

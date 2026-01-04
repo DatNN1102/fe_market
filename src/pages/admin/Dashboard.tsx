@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, Statistic, DatePicker, Row, Col, Typography } from 'antd';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, type TooltipProps } from 'recharts';
 import dayjs from 'dayjs';

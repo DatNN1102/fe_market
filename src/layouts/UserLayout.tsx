@@ -5,7 +5,6 @@ import { DownOutlined, FacebookFilled, HeartFilled, InstagramFilled, LoginOutlin
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../hook/useAuth';
 import { getProfileApi } from '../api/users';
-import useOrder from '../hook/useOrder';
 import useInfo from '../hook/useInfo';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../redux/store';

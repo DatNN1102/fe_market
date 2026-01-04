@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Input,
     Table,
     Tag,
     Modal,
@@ -22,7 +21,7 @@ const EvaluateList: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
-    const [searchName, setSearchName] = useState('');
+    const [searchName] = useState('');
     const [starRating, setStarRating] = useState<number | undefined>(undefined);
 
     const fetchData = async () => {

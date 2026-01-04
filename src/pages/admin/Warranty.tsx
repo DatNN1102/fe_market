@@ -4,7 +4,6 @@ import {
     Tag,
     Modal,
     Descriptions,
-    Dropdown,
     message,
     Select,
     Input,
@@ -74,16 +73,6 @@ const Warranty: React.FC = () => {
         setIsEditModalOpen(true);
     };
 
-    const handleUpdateStatus = async (record: any, newStatus: string) => {
-        try {
-            await updateWarrantyApi(record._id, { status: newStatus });
-            message.success('Cập nhật trạng thái thành công!');
-            fetchData();
-        } catch (error) {
-            message.error('Lỗi khi cập nhật trạng thái');
-        }
-    };
-
     const handleEditSubmit = async () => {
         try {
             const values = await form.validateFields();
@@ -128,7 +117,7 @@ const Warranty: React.FC = () => {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
-            render: (value: string, record: any) => (
+            render: (value: string) => (
                 // <Dropdown
                 //     trigger={['click']}
                 //     menu={{

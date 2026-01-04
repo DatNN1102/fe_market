@@ -46,7 +46,7 @@ const Users: React.FC = () => {
   };
 
   const handleSaveEdit = () => {
-    form.validateFields().then((values) => {
+    form.validateFields().then(() => {
       setEditModalOpen(false);
       message.success('Đã lưu thay đổi (chưa gọi API)');
     });

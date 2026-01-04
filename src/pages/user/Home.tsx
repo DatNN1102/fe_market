@@ -1,4 +1,4 @@
-import { Button, Checkbox, Col, Input, Pagination, Radio, Row, Slider } from 'antd';
+import { Button, Col, Input, Pagination, Radio, Row, Slider } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { CheckCircleOutlined, GiftOutlined, PhoneOutlined, SearchOutlined, ShoppingOutlined } from '@ant-design/icons';
 import ProductCard from '../../component/ProductCard';
@@ -9,9 +9,9 @@ const Home: React.FC = () => {
     const [dataProduct, setDataProduct] = useState<any[]>([]);
     const [total, setTotal] = useState<number>(0);
     const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(12);
+    const [limit] = useState(12);
     const [search, setSearch] = useState<string>('');
-    const [sort, setSort] = useState<string>('');
+    const [sort] = useState<string>('');
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 20000000]);
     const [sensor, setSensor] = useState<string[]>([]);
     const [features, setFeatures] = useState<Record<string, string[]>>({});

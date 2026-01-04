@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { EyeOutlined, HeartOutlined, SyncOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { ShoppingCartOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import { useDispatch } from 'react-redux';

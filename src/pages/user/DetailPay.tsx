@@ -4,7 +4,7 @@ import DOMPurify from 'dompurify';
 
 
 const DetailPay: React.FC = () => {
-  const [value, setValue] = useState('');
+  const [value] = useState('');
 
   const button = () => {
     fetch(`${import.meta.env.VITE_API_BASE_URL}/vnp/create_payment`, {

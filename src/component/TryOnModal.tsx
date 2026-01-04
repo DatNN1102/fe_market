@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Upload, Input, Form, Spin, message, Image, Divider, Row, Col } from 'antd';
+import { Modal, Button, Upload, Form, Spin, message, Image, Divider, Row, Col } from 'antd';
 import { UploadOutlined, ExperimentOutlined, DownloadOutlined, SkinOutlined } from '@ant-design/icons';
 import type { UploadFile, UploadProps } from 'antd';
 import axios from 'axios';
@@ -61,7 +61,7 @@ const TryOnModal: React.FC<TryOnModalProps> = ({ visible, onClose, productImage,
         onRemove: () => { setFile(null); setList([]); }
     });
 
-    const onFinish = async (values: any) => {
+    const onFinish = async () => {
         // Kiểm tra đủ 3 thành phần như BE yêu cầu
         if (!bodyFile && bodyList.length === 0) return message.warning('Thiếu ảnh người mẫu!');
         if (!pantList.length) return message.warning('Thiếu ảnh quần!');

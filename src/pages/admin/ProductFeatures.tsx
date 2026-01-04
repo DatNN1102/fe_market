@@ -4,11 +4,8 @@ import {
     Table,
     Tag,
     Modal,
-    Descriptions,
-    Dropdown,
     message,
     Button,
-    Select,
     Form,
 } from 'antd';
 import {
@@ -18,7 +15,6 @@ import {
 } from '../../api/product_features';
 import moment from 'moment';
 
-const { Option } = Select;
 const { Search } = Input;
 
 const ProductFeatures: React.FC = () => {
@@ -30,7 +26,7 @@ const ProductFeatures: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
-    const [isShow, setIsShow] = useState<number | undefined>(undefined);
+    const [isShow] = useState<number | undefined>(undefined);
     const [form] = Form.useForm();
 
     const fetchData = async () => {
@@ -120,16 +116,6 @@ const ProductFeatures: React.FC = () => {
         } catch (error) {
             console.error(error);
             message.error('Lỗi khi lưu tính năng');
-        }
-    };
-
-    const handleUpdateIsShow = async (record: any, newValue: boolean) => {
-        try {
-            await updateProductFeatureApi(record._id, { isShow: newValue ? 1 : 0 });
-            message.success('Cập nhật hiển thị thành công!');
-            fetchData();
-        } catch (error) {
-            message.error('Lỗi khi cập nhật hiển thị');
         }
     };
 

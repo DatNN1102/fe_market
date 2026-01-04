@@ -25,8 +25,8 @@ const Products: React.FC = () => {
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [search, setSearch] = useState<string>('');
-  const [sort, setSort] = useState<string>(''); // 'asc' | 'desc' | ''
+  const [search] = useState<string>('');
+  const [sort] = useState<string>(''); // 'asc' | 'desc' | ''
   const urlImg = import.meta.env.VITE_API_IMG_URL;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
