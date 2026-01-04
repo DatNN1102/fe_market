@@ -7,8 +7,7 @@ const DetailPay: React.FC = () => {
   const [value, setValue] = useState('');
 
   const button = () => {
-    // fetch('http://localhost:3000/users')
-    fetch('http://localhost:3000/vnp/create_payment', {
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/vnp/create_payment`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

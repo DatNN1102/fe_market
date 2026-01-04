@@ -11,7 +11,7 @@ interface TryOnModalProps {
     productType?: 'shirt' | 'pant';
 }
 
-const API_BASE_URL = 'http://localhost:3000/openai';
+const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/openai`;
 
 const TryOnModal: React.FC<TryOnModalProps> = ({ visible, onClose, productImage, productType }) => {
     const [form] = Form.useForm();
