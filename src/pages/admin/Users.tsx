@@ -39,11 +39,11 @@ const Users: React.FC = () => {
     setViewModalOpen(true);
   };
 
-  const handleEdit = (user: any) => {
-    setSelectedUser(user);
-    form.setFieldsValue(user);
-    setEditModalOpen(true);
-  };
+  // const handleEdit = (user: any) => {
+  //   setSelectedUser(user);
+  //   form.setFieldsValue(user);
+  //   setEditModalOpen(true);
+  // };
 
   const handleSaveEdit = () => {
     form.validateFields().then(() => {
@@ -79,7 +79,7 @@ const Users: React.FC = () => {
       render: (_: any, record: any) => (
         <Space size="middle">
           <Button type="default" onClick={() => handleView(record)}>Xem</Button>
-          <Button type="primary" onClick={() => handleEdit(record)}>Sửa</Button>
+          {/* <Button type="primary" onClick={() => handleEdit(record)}>Sửa</Button> */}
         </Space>
       ),
     },

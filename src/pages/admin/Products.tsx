@@ -108,7 +108,7 @@ const Products: React.FC = () => {
         }
         return (
           <>
-            {Object.entries(parsed).map(([group, value]: any) => (
+            {Object?.entries(parsed)?.map(([group, value]: any) => (
               <Tag key={group} color="blue">{`${group}: ${value}`}</Tag>
             ))}
           </>
@@ -171,8 +171,8 @@ const Products: React.FC = () => {
 
   const showEditModal = (record: any) => {
     if (record.images.length !== 0) {
-      const initialImages: any = record.images.split(',') || [];
-      const converted = initialImages.map((imageName: any, index: any) => ({
+      const initialImages: any = record?.images?.split(',') || [];
+      const converted = initialImages?.map((imageName: any, index: any) => ({
         uid: `-old-${index}`,
         name: imageName,
         status: 'done',
@@ -184,7 +184,7 @@ const Products: React.FC = () => {
     setIsEditMode(true);
     setSelectedProduct(record);
 
-    const featuresParsed = record.feature ? JSON.parse(record.feature) : {};
+    const featuresParsed = record?.feature ? JSON.parse(record?.feature) : {};
     form.setFieldsValue({ ...record, feature: featuresParsed });
     setIsModalOpen(true);
   };

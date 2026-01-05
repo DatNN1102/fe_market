@@ -114,7 +114,7 @@ const Home: React.FC = () => {
             <div className="relative bg-gray-900 text-white">
                 {/* Hình ảnh nền */}
                 <img
-                    src="/public/banner.png"
+                    src="/banner.png"
                     alt="Main Banner"
                     className="w-full object-contain"
                 />
