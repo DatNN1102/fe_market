@@ -156,8 +156,8 @@ const UserLayout: React.FC = () => {
 
               <h3 className="text-lg font-semibold mb-2">HỖ TRỢ THANH TOÁN</h3>
               <div className="flex flex-wrap gap-2">
-                <img src={`/public/vn_pay.svg`} alt='vn pay' className="h-6" />
-                <img src={`/public/atm_pay.svg`} alt='atm pay' className="h-6" />
+                <img src={`/vn_pay.svg`} alt='vn pay' className="h-6" />
+                <img src={`/atm_pay.svg`} alt='atm pay' className="h-6" />
               </div>
             </div>
           </div>

@@ -60,7 +60,7 @@ const ProductCard: React.FC<ProductProps> = ({
               <img src={imgShow} alt={name} className="object-contain w-full h-full" />
             ) :
             (
-              <img src="/public/no-image.jpg" alt="no image" className="object-contain w-full h-full" />
+              <img src="/no-image.jpg" alt="no image" className="object-contain w-full h-full" />
             )
         }
       </div>

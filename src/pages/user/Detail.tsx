@@ -204,19 +204,19 @@ const Detail: React.FC = () => {
               <div className="font-semibold">✅ Chính sách hỗ trợ</div>
               <ul className="text-sm text-gray-700 space-y-2">
                 <li className="flex items-start space-x-2">
-                  <img src={`/public/free_ship.svg`} alt="truck" className="w-9 h-9 mt-0.5" />
+                  <img src={`/free_ship.svg`} alt="truck" className="w-9 h-9 mt-0.5" />
                   <div><strong>Vận chuyển miễn phí</strong><br />Hóa đơn trên 5 triệu</div>
                 </li>
                 <li className="flex items-start space-x-2">
-                  <img src={`/public/gift.svg`} alt="gift" className="w-9 h-9 mt-0.5" />
+                  <img src={`/gift.svg`} alt="gift" className="w-9 h-9 mt-0.5" />
                   <div><strong>Quà tặng</strong><br />Hóa đơn trên 10 triệu</div>
                 </li>
                 <li className="flex items-start space-x-2">
-                  <img src={`/public/product_policy.svg`} alt="medal" className="w-9 h-9 mt-0.5" />
+                  <img src={`/product_policy.svg`} alt="medal" className="w-9 h-9 mt-0.5" />
                   <div><strong>Chứng nhận chất lượng</strong><br />Sản phẩm chính hãng</div>
                 </li>
                 <li className="flex items-start space-x-2">
-                  <img src={`/public/hotline.svg`} alt="support" className="w-9 h-9 mt-0.5" />
+                  <img src={`/hotline.svg`} alt="support" className="w-9 h-9 mt-0.5" />
                   <div><strong>Hotline: 1900 6750</strong><br />Hỗ trợ 24/7</div>
                 </li>
               </ul>
