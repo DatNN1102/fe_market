@@ -15,6 +15,13 @@ export const getProductApi = async (params?: ProductParams): Promise<any> => {
   return response.data;
 };
 
+export const getBestDealApi = async (limit: number = 4): Promise<any> => {
+  const response = await axiosInstance.get('/products/best-deals', {
+    params: { limit },
+  });
+  return response.data;
+};
+
 export const getProductDetailApi = async (id?: string): Promise<any> => {
   const response = await axiosInstance.get('/products/' + id);
   return response.data;

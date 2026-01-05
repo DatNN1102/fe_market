@@ -1,21 +1,30 @@
-import { Button, Col, Input, Pagination, Radio, Row, Slider } from 'antd';
+import { Button, Col, Input, Pagination, Radio, Row, Slider, Tag } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
-import { CheckCircleOutlined, GiftOutlined, PhoneOutlined, SearchOutlined, ShoppingOutlined } from '@ant-design/icons';
+import {
+    CheckCircleOutlined, GiftOutlined, PhoneOutlined,
+    SearchOutlined, ShoppingOutlined, ThunderboltOutlined,
+    SortAscendingOutlined, SortDescendingOutlined // Import thêm icon cho đẹp
+} from '@ant-design/icons';
 import ProductCard from '../../component/ProductCard';
-import { getProductApi } from '../../api/products';
+import { getProductApi, getBestDealApi } from '../../api/products';
 import { getProductFeatureApi } from '../../api/product_features';
 
 const Home: React.FC = () => {
     const [dataProduct, setDataProduct] = useState<any[]>([]);
+    const [bestDeals, setBestDeals] = useState<any[]>([]);
     const [total, setTotal] = useState<number>(0);
     const [page, setPage] = useState(1);
     const [limit] = useState(12);
     const [search, setSearch] = useState<string>('');
-    const [sort] = useState<string>('');
+
+    // ✅ BƯỚC 1: Thêm setSort vào useState
+    const [sort, setSort] = useState<string>('');
+
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 20000000]);
     const [sensor, setSensor] = useState<string[]>([]);
     const [features, setFeatures] = useState<Record<string, string[]>>({});
     const [featureList, setFeatureList] = useState<any[]>([]);
+    const productListRef = useRef<HTMLDivElement>(null);
 
     const featuresHome = [
         {
@@ -43,17 +52,29 @@ const Home: React.FC = () => {
             bg: 'bg-green-50',
         },
     ];
-    const productListRef = useRef<HTMLDivElement>(null);
+
+    const fetchBestDeals = async () => {
+        try {
+            const res = await getBestDealApi(4);
+            if (res.success) {
+                setBestDeals(res.data);
+            }
+        } catch (error) {
+            console.error("Lỗi lấy best deals:", error);
+        }
+    };
 
     const handleApply = async () => {
         callApiGetProduct(page, limit, search, sort, priceRange[0], priceRange[1], sensor, features);
     };
 
+    // ✅ BƯỚC 3: Reset cả sort về mặc định
     const handleReset = () => {
         setPriceRange([0, 20000000]);
         setSensor([]);
         setFeatures({});
         setSearch('');
+        setSort(''); // Reset sort
     };
 
     const callApiGetProduct = async (
@@ -75,9 +96,9 @@ const Home: React.FC = () => {
                 minPrice: minPrice,
                 maxPrice: maxPrice,
                 sensorValve: Array.isArray(sensorValve)
-                    ? sensorValve.join(',') // ✅ Gửi dạng "0,1"
+                    ? sensorValve.join(',')
                     : sensorValve || '',
-                feature: JSON.stringify(feature) // ✅ Gửi dạng JSON string
+                feature: JSON.stringify(feature)
             });
             setDataProduct(result.data);
             setTotal(result.total);
@@ -95,7 +116,7 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         callApiGetProduct(page, limit, search, sort, priceRange[0], priceRange[1], sensor, features);
-    }, [page, limit, sort]);
+    }, [page, limit, sort]); // sort thay đổi sẽ tự gọi lại API
 
     useEffect(() => {
         const fetchFeatures = async () => {
@@ -107,27 +128,17 @@ const Home: React.FC = () => {
             }
         };
         fetchFeatures();
+        fetchBestDeals();
     }, []);
 
     return (
         <div className='over'>
             <div className="relative bg-gray-900 text-white">
-                {/* Hình ảnh nền */}
                 <img
                     src="/banner.png"
                     alt="Main Banner"
                     className="w-full object-contain"
                 />
-
-                {/* Nội dung chữ nằm trên hình */}
-                {/* <div className="absolute inset-0 flex flex-col justify-center items-start px-10 md:px-20">
-                    <h1 className="text-3xl md:text-5xl font-bold mb-4 drop-shadow-lg">
-                        Chào mừng đến với STORE
-                    </h1>
-                    <p className="text-base md:text-lg mb-6 max-w-xl drop-shadow">
-                        Khám phá các sản phẩm áp suất lốp mới nhất với giá ưu đãi và hỗ trợ tốt nhất từ chúng tôi.
-                    </p>
-                </div> */}
             </div>
             <div className='ctnCustom'>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 py-6 px-4 md:px-10 w-full">
@@ -145,8 +156,34 @@ const Home: React.FC = () => {
                     ))}
                 </div>
             </div>
+
             <div className="ctnCustom">
                 <div className="flex flex-col items-center w-full" ref={productListRef}>
+
+                    {bestDeals.length > 0 && (
+                        <div className="w-full mb-8 bg-gradient-to-r from-red-50 to-orange-50 p-6 rounded-2xl border border-red-100">
+                            <div className="flex items-center gap-2 mb-4 border-b border-red-200 pb-2">
+                                <ThunderboltOutlined className="text-2xl text-red-600 animate-pulse" />
+                                <h2 className="text-2xl font-bold text-red-600 uppercase m-0">
+                                    Săn Sale Giá Sốc
+                                </h2>
+                                <Tag color="red" className="ml-2 font-bold">HOT</Tag>
+                            </div>
+                            <Row gutter={[16, 16]}>
+                                {bestDeals.map((item, index) => (
+                                    <Col span={6} key={index}>
+                                        <div className="relative transform hover:-translate-y-1 transition duration-300">
+                                            <div className="absolute top-2 right-2 z-10 bg-red-600 text-white px-2 py-1 rounded-md font-bold text-xs shadow-md">
+                                                -{item.discountPercent ? Math.round(item.discountPercent) : 0}%
+                                            </div>
+                                            <ProductCard {...item} />
+                                        </div>
+                                    </Col>
+                                ))}
+                            </Row>
+                        </div>
+                    )}
+
                     <Row gutter={[16, 16]} className="w-full">
                         <Col span={6}>
                             <div className={`p-4 border border-[#ddd] rounded-[10px] shadow-sm bg-white space-y-6`}>
@@ -156,6 +193,8 @@ const Home: React.FC = () => {
                                         onChange={(e) => setSearch(e.target.value)}
                                     />
                                 </div>
+
+                                {/* Khoảng giá */}
                                 <div>
                                     <div className="flex justify-between items-center font-semibold">
                                         <span>Khoảng giá</span>
@@ -173,15 +212,40 @@ const Home: React.FC = () => {
                                     </div>
                                 </div>
 
+                                {/* ✅ BƯỚC 2: Thêm UI Sắp xếp giá */}
+                                <div className="border-t border-gray-100 pt-4">
+                                    <div className="flex justify-between items-center font-semibold mb-2">
+                                        <span>Sắp xếp theo giá</span>
+                                    </div>
+                                    <Radio.Group
+                                        value={sort}
+                                        onChange={(e) => setSort(e.target.value)}
+                                        className="flex flex-col space-y-2"
+                                    >
+                                        <Radio value="">Mặc định</Radio>
+                                        <Radio value="asc">
+                                            <span className="flex items-center gap-2">
+                                                <SortAscendingOutlined /> Giá tăng dần
+                                            </span>
+                                        </Radio>
+                                        <Radio value="desc">
+                                            <span className="flex items-center gap-2">
+                                                <SortDescendingOutlined /> Giá giảm dần
+                                            </span>
+                                        </Radio>
+                                    </Radio.Group>
+                                </div>
+                                {/* ----------------------------- */}
+
                                 {featureList.map((feature) => (
-                                    <div key={feature._id}>
+                                    <div key={feature._id} className="border-t border-gray-100 pt-4">
                                         <div className="flex justify-between items-center font-semibold">
                                             <span>{feature.nameFeature}</span>
                                         </div>
                                         <Radio.Group
-                                            value={features[feature.nameFeature] ?? ''} // ✅ Giá trị hiện tại (1 value duy nhất)
+                                            value={features[feature.nameFeature] ?? ''}
                                             onChange={(e) =>
-                                                handleFeatureChange(feature.nameFeature, e.target.value) // ✅ Lấy value duy nhất
+                                                handleFeatureChange(feature.nameFeature, e.target.value)
                                             }
                                             className="flex flex-col mt-2 space-y-2"
                                         >
@@ -198,42 +262,22 @@ const Home: React.FC = () => {
                                     </div>
                                 ))}
 
-
-                                {/* {featureList.map((feature) => (
-                                    <div key={feature._id}>
-                                        <div className="flex justify-between items-center font-semibold">
-                                            <span>{feature.nameFeature}</span>
-                                        </div>
-                                        <Checkbox.Group
-                                            value={features[feature.nameFeature] as any ?? []}
-                                            onChange={(checked) =>
-                                                handleFeatureChange(feature.nameFeature, checked as string[])
-                                            }
-                                            className="flex flex-col mt-2 space-y-2"
-                                        >
-                                            {feature.valueFeature
-                                                .split(',')
-                                                .map((val: string) => val.trim())
-                                                .filter((v: any) => v)
-                                                .map((val: string, idx: number) => (
-                                                    <Checkbox value={val} key={idx}>{val}</Checkbox>
-                                                ))}
-                                        </Checkbox.Group>
-                                    </div>
-                                ))} */}
-
-                                {/* Nút áp dụng và xóa */}
-                                <div className="flex justify-between">
+                                <div className="flex justify-between pt-2">
                                     <Button type="default" className="bg-gray-100" onClick={handleApply}>
                                         Áp dụng
                                     </Button>
-                                    <button onClick={handleReset} className="text-orange-600 font-medium">
+                                    <button onClick={handleReset} className="text-orange-600 font-medium hover:underline">
                                         Xóa bộ lọc
                                     </button>
                                 </div>
                             </div>
                         </Col>
+
                         <Col span={18}>
+                            <div className="flex items-center gap-2 mb-4">
+                                <ShoppingOutlined className="text-xl text-blue-600" />
+                                <h3 className="text-xl font-bold text-gray-800 m-0">Tất cả sản phẩm</h3>
+                            </div>
                             <Row gutter={[16, 16]} className="w-full">
                                 {dataProduct.map((item, index) => (
                                     <Col span={8} key={index}>
@@ -244,7 +288,6 @@ const Home: React.FC = () => {
                         </Col>
                     </Row>
 
-                    {/* Navigator bên dưới */}
                     <div className="flex justify-center py-4">
                         <Pagination
                             current={page}
