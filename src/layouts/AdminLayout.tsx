@@ -92,7 +92,7 @@ const AdminLayout: React.FC = () => {
       {/* Main layout */}
       <Layout>
         {/* Header */}
-        <Header className="bg-white px-6 flex justify-end items-center shadow">
+        <Header className="bg-white! px-6 flex justify-end items-center shadow">
           <div className="flex items-center gap-3">
             <Dropdown overlay={menu} placement="bottomRight" arrow>
               <div className="flex items-center gap-3 cursor-pointer select-none">

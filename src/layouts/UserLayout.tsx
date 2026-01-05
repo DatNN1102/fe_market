@@ -49,7 +49,7 @@ const UserLayout: React.FC = () => {
       <header className='over h-16 flex justify-between bg-[#212529] fixed top-0 left-0 right-0 z-50'>
         <div className='ctnCustom flex justify-between items-center text-white'>
           <div className='flex gap-4'>
-            <p className='text-[42px] font-semibold cursor-pointer' onClick={() => {navigate('/')}} >DCAR</p>
+            <p className='text-[42px] font-semibold cursor-pointer' onClick={() => {navigate('/')}} >STORE</p>
             {/* <img src="/logo.webp" alt="logo" className="w-60 object-contain" onClick={() => {navigate('/')}}/> */}
           </div>
           <div className="flex items-center space-x-6">
@@ -109,9 +109,9 @@ const UserLayout: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
             {/* Cột 1 */}
             <div>
-              <h2 className="text-2xl font-extrabold mb-4">DCAR</h2>
+              <h2 className="text-2xl font-extrabold mb-4">STORE</h2>
               <p className="mb-4 leading-relaxed">
-                Hệ thống cửa hàng DCAR chuyên vê áp suất lốp chính hãng - Giá tốt, giao miễn phí.
+                Hệ thống cửa hàng STORE chuyên vê thời trang - Giá tốt, giao miễn phí.
               </p>
               <ul className="space-y-1 text-gray-300">
                 <li><strong>Địa chỉ:</strong> 70 Lữ Gia, Phường 15, Quận 11, Tp.HCM</li>
@@ -165,7 +165,7 @@ const UserLayout: React.FC = () => {
 
         {/* Dòng bản quyền */}
         <div className="text-center text-xs bg-gray-100 text-black py-3">
-          © Bản quyền thuộc về <strong>Duy Nguyen</strong>
+          © Bản quyền thuộc về <strong>Ngoc Dat</strong>
         </div>
 
         {/* Nút nổi bên phải */}

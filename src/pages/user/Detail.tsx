@@ -304,7 +304,8 @@ const Detail: React.FC = () => {
       <TryOnModal 
         visible={isTryOnModalOpen} 
         onClose={() => setIsTryOnModalOpen(false)}
-        productImage={`${urlImg}/${selectedImage}`} 
+        productImage={`${urlImg}/${selectedImage}`}
+        productId={dataProductDetail._id}
       />
       <Modal
         open={open}

@@ -122,7 +122,7 @@ const Home: React.FC = () => {
                 {/* Nội dung chữ nằm trên hình */}
                 {/* <div className="absolute inset-0 flex flex-col justify-center items-start px-10 md:px-20">
                     <h1 className="text-3xl md:text-5xl font-bold mb-4 drop-shadow-lg">
-                        Chào mừng đến với DCAR
+                        Chào mừng đến với STORE
                     </h1>
                     <p className="text-base md:text-lg mb-6 max-w-xl drop-shadow">
                         Khám phá các sản phẩm áp suất lốp mới nhất với giá ưu đãi và hỗ trợ tốt nhất từ chúng tôi.

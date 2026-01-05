@@ -11,7 +11,7 @@ import {
   deleteProductApi
 } from '../../api/products';
 import { getProductFeatureApi } from '../../api/product_features';
-import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { PlusOutlined, UploadOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
@@ -26,7 +26,7 @@ const Products: React.FC = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [search] = useState<string>('');
-  const [sort] = useState<string>(''); // 'asc' | 'desc' | ''
+  const [sort] = useState<string>('');
   const urlImg = import.meta.env.VITE_API_IMG_URL;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -102,7 +102,7 @@ const Products: React.FC = () => {
       render: (feature: string) => {
         let parsed = {};
         try {
-          parsed = JSON.parse(feature);
+          parsed = feature ? JSON.parse(feature) : {};
         } catch {
           parsed = {};
         }
@@ -162,15 +162,16 @@ const Products: React.FC = () => {
     }
   };
 
-  const  deleteProduct= async(record: any) => {
+  const deleteProduct = async (record: any) => {
     const result = await deleteProductApi(record?._id)
-    if(result?.success) {
-       message.success('Xóa sản phẩm thành công');
+    if (result?.success) {
+      message.success('Xóa sản phẩm thành công');
+      callApiGetProduct(page, limit, search, sort);
     }
   }
 
   const showEditModal = (record: any) => {
-    if (record.images.length !== 0) {
+    if (record.images && record.images.length !== 0) {
       const initialImages: any = record?.images?.split(',') || [];
       const converted = initialImages?.map((imageName: any, index: any) => ({
         uid: `-old-${index}`,
@@ -179,13 +180,25 @@ const Products: React.FC = () => {
         url: `${urlImg}/${imageName}`,
       }));
       setFileList(converted);
+    } else {
+      setFileList([]);
     }
 
     setIsEditMode(true);
     setSelectedProduct(record);
 
-    const featuresParsed = record?.feature ? JSON.parse(record?.feature) : {};
-    form.setFieldsValue({ ...record, feature: featuresParsed });
+    let featureList: any = [];
+    try {
+      const parsed = record.feature ? JSON.parse(record.feature) : {};
+      featureList = Object.entries(parsed).map(([key, value]) => ({
+        name: key,
+        value: value,
+      }));
+    } catch (e) {
+      featureList = [];
+    }
+
+    form.setFieldsValue({ ...record, featureList });
     setIsModalOpen(true);
   };
 
@@ -193,6 +206,7 @@ const Products: React.FC = () => {
     setIsEditMode(false);
     setSelectedProduct(null);
     form.resetFields();
+    setFileList([]);
     setIsModalOpen(true);
   };
 
@@ -206,15 +220,16 @@ const Products: React.FC = () => {
     try {
       const values = await form.validateFields();
 
-      // Validate tính năng không bỏ trống
-      const selectedFeatures = values.feature || {};
-      const missingFeatures = productFeatures.filter((f) => !selectedFeatures[f.nameFeature]);
-      if (missingFeatures.length > 0) {
-        message.error(`Bạn chưa chọn đủ tính năng: ${missingFeatures.map(f => f.nameFeature).join(', ')}`);
-        return;
+      const featureObj: any = {};
+      if (values.featureList && values.featureList.length > 0) {
+        values.featureList.forEach((item: any) => {
+          if (item?.name && item?.value) {
+            featureObj[item.name] = item.value;
+          }
+        });
       }
-
-      values.feature = JSON.stringify(values.feature);
+      values.feature = JSON.stringify(featureObj);
+      delete values.featureList;
 
       let result;
       const formData = new FormData();
@@ -245,6 +260,7 @@ const Products: React.FC = () => {
         setIsModalOpen(false);
         callApiGetProduct(page, limit, search, sort);
         form.resetFields();
+        setFileList([]);
       } else {
         message.error('Thao tác thất bại');
       }
@@ -395,28 +411,85 @@ const Products: React.FC = () => {
                 <Input.TextArea rows={3} />
               </Form.Item>
             </Col>
+
             <Col span={24}>
-              {/* Hiển thị danh sách tính năng */}
-              <Form.Item label="Tính năng">
-                {productFeatures.map((feature) => (
-                  <Form.Item
-                    key={feature._id}
-                    label={feature.nameFeature}
-                    name={['feature', feature.nameFeature]}
-                    rules={[{ required: true, message: `Vui lòng chọn ${feature.nameFeature}` }]}
-                    noStyle
-                  >
-                    <Select placeholder={`Chọn ${feature.nameFeature}`}>
-                      {feature.valueFeature.split(',').map((val: string) => (
-                        <Option key={val.trim()} value={val.trim()}>
-                          {val.trim()}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                ))}
-              </Form.Item>
+              <div className="mb-2 font-semibold">Tính năng sản phẩm</div>
+              <Form.List name="featureList">
+                {(fields, { add, remove }) => (
+                  <>
+                    {fields.map(({ key, name, ...restField }) => (
+                      <Row key={key} gutter={16} align="middle" style={{ marginBottom: 10 }}>
+                        <Col span={10}>
+                          <Form.Item
+                            {...restField}
+                            name={[name, 'name']}
+                            rules={[{ required: true, message: 'Chọn tính năng' }]}
+                            style={{ marginBottom: 0 }}
+                          >
+                            <Select placeholder="Tên tính năng">
+                              {productFeatures.map((pf) => (
+                                <Option key={pf._id} value={pf.nameFeature}>
+                                  {pf.nameFeature}
+                                </Option>
+                              ))}
+                            </Select>
+                          </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                          <Form.Item
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.featureList !== curValues.featureList
+                            }
+                            style={{ marginBottom: 0 }}
+                          >
+                            {() => {
+                              const features = form.getFieldValue('featureList') || [];
+                              const currentFeature = features[name];
+                              const selectedName = currentFeature?.name;
+                              const targetFeature = productFeatures.find(
+                                (f) => f.nameFeature === selectedName
+                              );
+                              const options = targetFeature
+                                ? targetFeature.valueFeature.split(',')
+                                : [];
+
+                              return (
+                                <Form.Item
+                                  {...restField}
+                                  name={[name, 'value']}
+                                  rules={[{ required: true, message: 'Chọn giá trị' }]}
+                                  style={{ marginBottom: 0 }}
+                                >
+                                  <Select
+                                    placeholder="Giá trị"
+                                    disabled={!selectedName}
+                                  >
+                                    {options.map((val: string) => (
+                                      <Option key={val.trim()} value={val.trim()}>
+                                        {val.trim()}
+                                      </Option>
+                                    ))}
+                                  </Select>
+                                </Form.Item>
+                              );
+                            }}
+                          </Form.Item>
+                        </Col>
+                        <Col span={2}>
+                          <MinusCircleOutlined onClick={() => remove(name)} style={{ fontSize: '18px', color: 'red' }} />
+                        </Col>
+                      </Row>
+                    ))}
+                    <Form.Item>
+                      <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                        Thêm tính năng
+                      </Button>
+                    </Form.Item>
+                  </>
+                )}
+              </Form.List>
             </Col>
+
             <Col span={24}>
               <Form.Item label="Ảnh sản phẩm">
                 <Upload
@@ -441,9 +514,7 @@ const Products: React.FC = () => {
                 rules={[{ required: true, message: 'Vui lòng nhập mô tả chi tiết' }]}
               >
                 <>
-                  {/* Toolbar */}
                   <div style={{ marginBottom: 8, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                    {/* Bold */}
                     <Button
                       onClick={() => editor?.chain().focus().toggleBold().run()}
                       disabled={!editor?.can().chain().focus().toggleBold().run()}
@@ -451,8 +522,6 @@ const Products: React.FC = () => {
                     >
                       B
                     </Button>
-
-                    {/* Italic */}
                     <Button
                       onClick={() => editor?.chain().focus().toggleItalic().run()}
                       disabled={!editor?.can().chain().focus().toggleItalic().run()}
@@ -460,16 +529,12 @@ const Products: React.FC = () => {
                     >
                       I
                     </Button>
-
-                    {/* Bullet List */}
                     <Button
                       onClick={() => editor?.chain().focus().toggleBulletList().run()}
                       type={editor?.isActive('bulletList') ? 'primary' : 'default'}
                     >
                       Bullet List
                     </Button>
-
-                    {/* Link */}
                     <Button
                       onClick={() => {
                         const url = prompt('Nhập URL liên kết:');
@@ -480,8 +545,6 @@ const Products: React.FC = () => {
                     >
                       Link
                     </Button>
-
-                    {/* Headings */}
                     <Button
                       onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}
                       type={editor?.isActive('heading', { level: 1 }) ? 'primary' : 'default'}
@@ -500,32 +563,24 @@ const Products: React.FC = () => {
                     >
                       H3
                     </Button>
-
-                    {/* Align Center */}
                     <Button
                       onClick={() => editor?.chain().focus().setTextAlign('center').run()}
                       type={editor?.isActive({ textAlign: 'center' }) ? 'primary' : 'default'}
                     >
                       Center
                     </Button>
-
-                    {/* Align Left */}
                     <Button
                       onClick={() => editor?.chain().focus().setTextAlign('left').run()}
                       type={editor?.isActive({ textAlign: 'left' }) ? 'primary' : 'default'}
                     >
                       Left
                     </Button>
-
-                    {/* Align Right */}
                     <Button
                       onClick={() => editor?.chain().focus().setTextAlign('right').run()}
                       type={editor?.isActive({ textAlign: 'right' }) ? 'primary' : 'default'}
                     >
                       Right
                     </Button>
-
-                    {/* Upload Image */}
                     <Upload
                       showUploadList={false}
                       customRequest={({ file }) => uploadImage(file as File)}
@@ -533,9 +588,6 @@ const Products: React.FC = () => {
                       <Button icon={<UploadOutlined />}>Thêm Ảnh</Button>
                     </Upload>
                   </div>
-
-
-                  {/* Editor */}
                   <div
                     style={{
                       border: '1px solid #d9d9d9',

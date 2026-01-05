@@ -22,7 +22,7 @@ const ProductFeatures: React.FC = () => {
     const [valueChoiseOne, setValueChoiseOne] = useState<string>('');
     const [features, setFeatures] = useState<any[]>([]);
     const [total, setTotal] = useState<number>(0);
-    const [editingFeature, setEditingFeature] = useState<any>(null); // để xác định Add hay Edit
+    const [editingFeature, setEditingFeature] = useState<any>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);

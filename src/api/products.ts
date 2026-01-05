@@ -34,3 +34,8 @@ export const deleteProductApi = async (id: string): Promise<any> => {
   const response = await axiosInstance.delete(`/products/${id}`);
   return response.data;
 };
+
+export const getProductRecommendlApi = async (id?: string): Promise<any> => {
+  const response = await axiosInstance.get('/products/recommend/' + id);
+  return response.data;
+};
